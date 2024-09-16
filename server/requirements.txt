@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+pydantic-settings 
+firebase_admin
+python-dotenv
+openai
+alembic 
+python-jose
+youtube-transcript-api

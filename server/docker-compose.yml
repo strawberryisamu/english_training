@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app
+      - ./alembic:/app/alembic
+    depends_on:
+      - db
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      - GOOGLE_CREDENTIALS=${GOOGLE_CREDENTIALS}
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydatabase
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

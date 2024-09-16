@@ -1,0 +1,50 @@
+// src/components/Navbar.tsx
+
+import React from 'react';
+import { AppBar, Toolbar, Typography, Button, IconButton } from '@mui/material';
+import { Menu as MenuIcon } from '@mui/icons-material';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+
+const Navbar: React.FC = () => {
+  const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('ログアウトエラー:', error);
+    }
+  };
+
+  return (
+    <AppBar position="static">
+      <Toolbar>
+        <IconButton edge="start" color="inherit" aria-label="menu" component={RouterLink} to="/">
+          <MenuIcon />
+        </IconButton>
+        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          学習アプリ
+        </Typography>
+        {currentUser ? (
+          <>
+            <Button color="inherit" component={RouterLink} to="/wordbook">
+              単語帳
+            </Button>
+            <Button color="inherit" onClick={handleLogout}>
+              ログアウト
+            </Button>
+          </>
+        ) : (
+          <Button color="inherit" component={RouterLink} to="/login">
+            ログイン
+          </Button>
+        )}
+      </Toolbar>
+    </AppBar>
+  );
+};
+
+export default Navbar;
