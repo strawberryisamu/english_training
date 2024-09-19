@@ -1,5 +1,5 @@
-import React from 'react';
-import { List, ListItemButton, ListItemText } from '@mui/material';
+// Subtitle.tsx
+import React, { useRef } from 'react';
 
 interface Caption {
   text: string;
@@ -9,23 +9,29 @@ interface Caption {
 
 interface SubtitleProps {
   captions: Caption[];
-  onExpressionClick: (expression: string) => void;
+  onTextSelect: (selectedText: string) => void;
 }
 
-const Subtitle: React.FC<SubtitleProps> = ({ captions = [], onExpressionClick }) => {
+const Subtitle: React.FC<SubtitleProps> = ({ captions, onTextSelect }) => {
+  const textContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseUp = () => {
+    if (window.getSelection) {
+      const selection = window.getSelection();
+      const selectedText = selection?.toString() || '';
+      onTextSelect(selectedText.trim());
+    }
+  };
+
   return (
-    <div>
-      <List>
-        {captions.length === 0 ? (
-          <ListItemText primary="字幕が取得できませんでした。" />
-        ) : (
-          captions.map((caption, index) => (
-            <ListItemButton key={index} onClick={() => onExpressionClick(caption.text)}>
-              <ListItemText primary={caption.text} />
-            </ListItemButton>
-          ))
-        )}
-      </List>
+    <div
+      ref={textContainerRef}
+      onMouseUp={handleMouseUp}
+      style={{ userSelect: 'text', padding: '1rem', border: '1px solid #ccc', overflowY: 'auto', height: '220px' }}
+    >
+      {captions.map((caption, index) => (
+        <span key={index}>{caption.text} </span>
+      ))}
     </div>
   );
 };

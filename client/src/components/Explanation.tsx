@@ -1,25 +1,42 @@
+// Explanation.tsx
 import React from 'react';
-import { Typography, Paper, Box } from '@mui/material';
+import { Button, Typography, Box } from '@mui/material';
 
 interface ExplanationProps {
-  expression: string;
+  selectedText: string;
   explanation: string;
+  onExplain: () => void;
 }
 
-const Explanation: React.FC<ExplanationProps> = ({ expression, explanation }) => {
+const Explanation: React.FC<ExplanationProps> = ({ selectedText, explanation, onExplain }) => {
   return (
-    <Box mb={2}>
-      <Typography variant="h6">解説</Typography>
-      {expression ? (
-        <Paper elevation={3} style={{ padding: '16px' }}>
-          <Typography variant="subtitle1" color="primary">
-            {expression}
-          </Typography>
-          <Typography variant="body1">{explanation}</Typography>
-        </Paper>
-      ) : (
-        <Typography variant="body1">表現を選択してください。</Typography>
-      )}
+    <Box>
+      <Typography variant="h6">選択されたフレーズ:</Typography>
+      <Typography variant="subtitle1" gutterBottom>
+        {selectedText || 'フレーズを選択してください'}
+      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={onExplain}
+        disabled={!selectedText}
+        fullWidth
+      >
+        解説を取得
+      </Button>
+      <Box
+        mt={2}
+        style={{
+          maxHeight: '430px',
+          overflowY: 'auto',
+          border: '1px solid #ccc',
+          padding: '1rem',
+        }}
+      >
+        <Typography variant="body1" style={{ whiteSpace: 'pre-wrap' }}>
+          {explanation || 'ここに解説が表示されます'}
+        </Typography>
+      </Box>
     </Box>
   );
 };

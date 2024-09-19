@@ -1,3 +1,4 @@
+// Learning.tsx
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import VideoPlayer from '../components/VideoPlayer';
@@ -18,7 +19,7 @@ const Learning: React.FC = () => {
   const location = useLocation();
   const [videoUrl, setVideoUrl] = useState<string>('');
   const [captions, setCaptions] = useState<Caption[]>([]);
-  const [selectedExpression, setSelectedExpression] = useState<string>('');
+  const [selectedText, setSelectedText] = useState<string>('');
   const [explanation, setExplanation] = useState<string>('');
   const [words, setWords] = useState<string[]>([]);
   const { accessToken } = useAuth();
@@ -37,10 +38,13 @@ const Learning: React.FC = () => {
       });
   }, [location]);
 
-  const handleExpressionClick = (expression: string) => {
-    setSelectedExpression(expression);
-    console.log(expression);
+  const handleTextSelect = (text: string) => {
+    setSelectedText(text);
+    setExplanation(''); // 新しいテキストが選択されたら解説をリセット
+  };
 
+  const handleExplain = () => {
+    // エンドポイントから解説を取得
     // 選択された表現とキャプション全体をバックエンドに送信
     fetch(`${process.env.REACT_APP_API_URL}/explain`, {
       method: 'POST',
@@ -48,7 +52,7 @@ const Learning: React.FC = () => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ expression, captions }),
+      body: JSON.stringify({ expression: selectedText, captions }),
     })
       .then((res) => res.json())
       .then((data) => setExplanation(data.explanation))
@@ -70,7 +74,7 @@ const Learning: React.FC = () => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ text: word }),
+      body: JSON.stringify({ text: word , meaning: explanation}),
     })
       .then((res) => res.json())
       .then((data) => {
@@ -81,19 +85,20 @@ const Learning: React.FC = () => {
       });
   };
 
-  
   return (
     <Box mt={4}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
           <VideoPlayer videoUrl={videoUrl} />
-          <Box style={{ height: '200px', overflowY: 'auto' }}>
-            <Subtitle captions={captions} onExpressionClick={handleExpressionClick} />
-          </Box>
+          <Subtitle captions={captions} onTextSelect={handleTextSelect} />
         </Grid>
         <Grid item xs={12} md={4}>
-          <Explanation expression={selectedExpression} explanation={explanation} />
-          <AddWordButton word={selectedExpression} onAddWord={handleAddWord} />
+          <Explanation
+            selectedText={selectedText}
+            explanation={explanation}
+            onExplain={handleExplain}
+          />
+          <AddWordButton word={selectedText} onAddWord={handleAddWord} />
           <WordList words={words} />
         </Grid>
       </Grid>
