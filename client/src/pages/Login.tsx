@@ -12,9 +12,12 @@ const Login: React.FC = () => {
   const handleLogin = async () => {
     try {
       await login();
-      navigate('/');
+      console.log('ログイン成功');
+      navigate('/'); // ログイン成功後、ホームページにリダイレクト
+      console.log('リダイレクト');
     } catch (error) {
       console.error('ログインエラー:', error);
+      // 必要に応じてユーザーにエラーメッセージを表示
     }
   };
 

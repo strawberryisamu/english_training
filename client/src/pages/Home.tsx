@@ -16,7 +16,7 @@ const Home: React.FC = () => {
   return (
     <Box mt={4}>
       <Typography variant="h4" gutterBottom>
-        ようこそ{currentUser ? `、${currentUser.displayName}さん！` : '！'}
+        ようこそ{currentUser ? `、${currentUser.name}さん！` : '！'}
       </Typography>
       <form onSubmit={handleSubmit}>
         <TextField

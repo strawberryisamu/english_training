@@ -19,13 +19,14 @@ const Navbar: React.FC = () => {
     }
   };
 
+  const handleTitleClick = () => {
+    navigate('/');
+  };
+
   return (
     <AppBar position="static">
       <Toolbar>
-        <IconButton edge="start" color="inherit" aria-label="menu" component={RouterLink} to="/">
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+        <Typography variant="h6" sx={{ flexGrow: 1, cursor: 'pointer' }} onClick={handleTitleClick}>
           学習アプリ
         </Typography>
         {currentUser ? (
@@ -38,9 +39,7 @@ const Navbar: React.FC = () => {
             </Button>
           </>
         ) : (
-          <Button color="inherit" component={RouterLink} to="/login">
-            ログイン
-          </Button>
+          <></>
         )}
       </Toolbar>
     </AppBar>

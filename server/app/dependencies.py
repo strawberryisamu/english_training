@@ -17,19 +17,26 @@ def get_db():
     finally:
         db.close()
 
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-    )
+def get_current_user(
+    token: str = Depends(oauth2_scheme),  # フロントエンドからAuthorizationヘッダーで送信
+    db: Session = Depends(get_db)
+):
+    print(token)
+    if not token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        uid: str = payload.get("sub")
+        uid = payload.get("sub")
         if uid is None:
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
+            raise HTTPException(status_code=401, detail="Invalid token")
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except jwt.JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
     user = crud.get_user(db, user_id=uid)
     if user is None:
-        raise credentials_exception
+        raise HTTPException(status_code=401, detail="User not found")
+
     return user

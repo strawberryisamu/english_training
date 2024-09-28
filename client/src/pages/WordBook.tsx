@@ -46,7 +46,7 @@ const WordBook: React.FC = () => {
   return (
     <Box mt={4}>
       <Typography variant="h4" gutterBottom>
-        {currentUser?.email}の単語帳
+        {currentUser?.name}さんの単語帳
       </Typography>
       {loading ? (
         <CircularProgress />

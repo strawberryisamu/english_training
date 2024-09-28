@@ -1,6 +1,7 @@
 // Explanation.tsx
 import React from 'react';
 import { Button, Typography, Box } from '@mui/material';
+import { Height } from '@mui/icons-material';
 
 interface ExplanationProps {
   selectedText: string;
@@ -12,9 +13,19 @@ const Explanation: React.FC<ExplanationProps> = ({ selectedText, explanation, on
   return (
     <Box>
       <Typography variant="h6">選択されたフレーズ:</Typography>
-      <Typography variant="subtitle1" gutterBottom>
-        {selectedText || 'フレーズを選択してください'}
-      </Typography>
+      <Box
+        style={{
+          height: '100px',
+          overflowY: 'auto',
+          border: '1px solid #ccc',
+          padding: '0.5rem',
+          marginBottom: '1rem',
+        }}
+      >
+        <Typography variant="subtitle1" gutterBottom>
+          {selectedText || 'フレーズを選択してください'}
+        </Typography>
+      </Box>
       <Button
         variant="contained"
         color="primary"
@@ -28,7 +39,7 @@ const Explanation: React.FC<ExplanationProps> = ({ selectedText, explanation, on
         mt={2}
         style={{
           maxHeight: '430px',
-          overflowY: 'auto',
+          overflowY: 'scroll',
           border: '1px solid #ccc',
           padding: '1rem',
         }}

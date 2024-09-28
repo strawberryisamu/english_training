@@ -1,13 +1,15 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
+import { on } from 'stream';
 
 interface AddWordButtonProps {
   word: string;
-  onAddWord: (word: string) => void;
+  meaning: string;
+  onAddWord: (word: string, meaning: string) => void;
 }
 
-const AddWordButton: React.FC<AddWordButtonProps> = ({ word, onAddWord }) => {
+const AddWordButton: React.FC<AddWordButtonProps> = ({ word, meaning, onAddWord }) => {
   const { accessToken } = useAuth();
 
   const handleAddWord = async () => {
@@ -21,9 +23,9 @@ const AddWordButton: React.FC<AddWordButtonProps> = ({ word, onAddWord }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({ text: word }),
+        body: JSON.stringify({ text: word, meaning: meaning }),
       });
 
       if (!response.ok) {
@@ -31,7 +33,7 @@ const AddWordButton: React.FC<AddWordButtonProps> = ({ word, onAddWord }) => {
       }
 
       const data = await response.json();
-      onAddWord(data.text);
+      onAddWord(data.text, data.meaning);
     } catch (error) {
       console.error('Error adding word:', error);
       // 必要に応じてユーザーにエラーメッセージを表示
@@ -42,7 +44,7 @@ const AddWordButton: React.FC<AddWordButtonProps> = ({ word, onAddWord }) => {
     <Button
       variant="contained"
       color="secondary"
-      onClick={handleAddWord}
+      onClick={() => onAddWord(word, meaning)}
       disabled={!word}
       fullWidth
     >

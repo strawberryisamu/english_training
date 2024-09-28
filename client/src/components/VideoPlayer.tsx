@@ -4,7 +4,6 @@ import { Box } from '@mui/material';
 interface VideoPlayerProps {
   videoUrl: string;
 }
-
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl }) => {
   const videoId = extractVideoId(videoUrl);
 
